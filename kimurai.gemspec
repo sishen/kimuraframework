@@ -42,7 +42,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency "addressable"
   spec.add_dependency "whenever"
 
-  spec.add_dependency "rbcat", "~> 0.2"
   spec.add_dependency "pry"
 
   spec.add_development_dependency "bundler", "~> 2.1"

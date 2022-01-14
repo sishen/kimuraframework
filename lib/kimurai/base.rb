@@ -14,11 +14,7 @@ module Kimurai
       output = "%s, [%s#%d] [%s: %s] %5s -- %s: %s\n"
         .freeze % [severity[0..0], datetime, $$, thread_type, current_thread_id, severity, progname, msg]
 
-      if Kimurai.configuration.colorize_logger != false && Kimurai.env == "development"
-        Rbcat.colorize(output, predefined: [:jsonhash, :logger])
-      else
-        output
-      end
+      output
     end
 
     include BaseHelper

@@ -24,7 +24,6 @@ module Kimurai
       end
 
       ENV.store("SESSION_ID", @start_time.to_i.to_s)
-      ENV.store("RBCAT_COLORIZER", "false")
     end
 
     def run!(exception_on_fail: true)
