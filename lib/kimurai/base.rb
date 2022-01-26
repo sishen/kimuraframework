@@ -1,3 +1,5 @@
+require 'uri/http'
+require 'uri/https'
 require_relative 'base/saver'
 require_relative 'base/storage'
 
@@ -193,7 +195,11 @@ module Kimurai
     end
 
     def request_to(handler, delay = nil, url:, data: {}, response_type: :html)
-      raise InvalidUrlError, "Requested url is invalid: #{url}" unless URI.parse(url).kind_of?(URI::HTTP)
+      case URI.parse(url)
+      when URI::HTTP, URI::HTTPS
+      else
+        raise InvalidUrlError, "Requested url is invalid: #{url}"
+      end
 
       if @config[:skip_duplicate_requests] && !unique_request?(url)
         add_event(:duplicate_requests) if self.with_info
@@ -228,9 +234,9 @@ module Kimurai
       @savers[path] ||= begin
         options = { format: format, position: position, append: append }
         if self.with_info
-          self.class.savers[path] ||= Saver.new(path, options)
+          self.class.savers[path] ||= Saver.new(path, **options)
         else
-          Saver.new(path, options)
+          Saver.new(path, **options)
         end
       end
 
@@ -308,7 +314,7 @@ module Kimurai
           part.each do |url_data|
             if url_data.class == Hash
               if url_data[:url].present? && url_data[:data].present?
-                spider.request_to(handler, delay, url_data)
+                spider.request_to(handler, delay, **url_data)
               else
                 spider.public_send(handler, url_data)
               end
