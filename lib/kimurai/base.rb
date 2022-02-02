@@ -121,7 +121,7 @@ module Kimurai
       if start_urls
         start_urls.each do |start_url|
           if start_url.class == Hash
-            spider.request_to(:parse, start_url)
+            spider.request_to(:parse, **start_url)
           else
             spider.request_to(:parse, url: start_url)
           end
@@ -211,7 +211,11 @@ module Kimurai
 
       options =  { url: url, data: data }
 
-      public_send(handler, browser.current_response(response_type), **options)
+      begin
+        public_send(handler, browser.current_response(response_type), **options)
+      rescue Selenium::WebDriver::Error::JavascriptError => e
+        raise unless e.message.include?("Cannot read properties of null (reading 'outerHTML')")
+      end
     end
 
     def console(response = nil, url: nil, data: {})

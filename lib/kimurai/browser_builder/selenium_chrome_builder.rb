@@ -111,6 +111,7 @@ module Kimurai::BrowserBuilder
 
         chromedriver_path = Kimurai.configuration.chromedriver_path || "/usr/local/bin/chromedriver"
         service = Selenium::WebDriver::Service.chrome(path: chromedriver_path)
+        driver_options.add_option("excludeSwitches", ['enable-automation'])
         Capybara::Selenium::Driver.new(app, browser: :chrome, capabilities: [driver_options], service: service)
       end
 
